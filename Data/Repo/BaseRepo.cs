@@ -18,7 +18,7 @@ namespace Data.Repo
         public async Task<T?> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
         public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
         public async Task AddAsync(T entity) => await _dbSet.AddAsync(entity);
-        public void UpdateAsync(T entity)
+        public void Update(T entity)
         {
             _dbSet.Update(entity);
         }
