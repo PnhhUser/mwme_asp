@@ -1,6 +1,7 @@
 using Application.Services.Interface;
 using Domain.Entities;
 using Domain.Interfaces;
+using Domain.Rules;
 
 namespace Application.Services;
 
@@ -20,56 +21,22 @@ public class AccountService : IAccountService
 
     public async Task<bool> ExistAsync(int id)
     {
-        if (id <= 0)
-        {
-            throw new ArgumentException("ID phải lớn hơn 0", nameof(id));
-        }
+        BaseRules.ThrowIfIdIsInvalid(id);
 
-        try
-        {
-            var isExist = await _accountRepo.ExistsAsync(p => p.Id == id);
-
-            return isExist;
-        }
-        catch (Exception e)
-        {
-            throw new InvalidOperationException($"Lỗi khi kiểm tra tồn tại Account với ID = {id}", e);
-        }
+        return await _accountRepo.ExistsAsync(p => p.Id == id);
     }
 
     public async Task<AccountEntity?> FindByName(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            throw new ArgumentException("Tên không được để trống", nameof(name));
-        }
+        BaseRules.ThrowIfStringIsNullOrEmpty(name, nameof(name));
 
-        try
-        {
-            var account = await _accountRepo.FirstOrDefaultAsync(p => p.Name == name);
-            return account;
-        }
-        catch (Exception e)
-        {
-            throw new InvalidOperationException($"Lỗi khi tìm Account với tên = {name}", e);
-        }
+        return await _accountRepo.FirstOrDefaultAsync(p => p.Name == name);
     }
 
     public async Task<AccountEntity?> FindById(int id)
     {
-        if (id <= 0)
-        {
-            throw new ArgumentException("ID phải lớn hơn 0", nameof(id));
-        }
+        BaseRules.ThrowIfIdIsInvalid(id);
 
-        try
-        {
-            var account = await _accountRepo.FirstOrDefaultAsync(p => p.Id == id);
-            return account;
-        }
-        catch (Exception e)
-        {
-            throw new InvalidOperationException($"Lỗi khi tìm Account với tên = {id}", e);
-        }
+        return await _accountRepo.FirstOrDefaultAsync(p => p.Id == id);
     }
 }
