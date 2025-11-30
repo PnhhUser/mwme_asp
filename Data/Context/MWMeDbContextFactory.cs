@@ -18,7 +18,7 @@ public class MWMeDbContextFactory : IDesignTimeDbContextFactory<MWMeDbContext>
         if (string.IsNullOrEmpty(server) || string.IsNullOrEmpty(dbName) ||
     string.IsNullOrEmpty(user) || string.IsNullOrEmpty(password))
         {
-            throw new InvalidOperationException("Missing required environment variables. Check your .env file");
+            throw new InvalidOperationException("Missing required environment variables.");
         }
 
         var connStr = $"Server={server};Database={dbName};User={user};Password={password};";

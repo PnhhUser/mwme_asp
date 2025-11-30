@@ -7,11 +7,5 @@ namespace Data.Repo;
 
 public class AccountRepo : BaseRepo<AccountEntity>, IAccountRepo
 {
-    public AccountRepo(MWMeDbContext context) : base(context)
-    {
-    }
-
-    public async Task<AccountEntity?> GetByName(string name) => await _dbSet.FirstOrDefaultAsync(p => p.Name == name);
-
-
+    public AccountRepo(MWMeDbContext context) : base(context) { }
 }

@@ -8,7 +8,7 @@ public static class RepositoryExtensions
 {
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        // Đăng ký từng Repo
+        // Đăng ký
         services.AddScoped<IAccountRepo, AccountRepo>();
 
 

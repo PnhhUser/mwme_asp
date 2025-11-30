@@ -3,7 +3,4 @@ using Domain.Entities;
 
 namespace Domain.Interfaces;
 
-public interface IAccountRepo
-{
-    Task<AccountEntity?> GetByName(string name);
-}
+public interface IAccountRepo : IBaseRepo<AccountEntity> { }

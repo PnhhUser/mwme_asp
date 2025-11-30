@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Data.Context;
 using Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace Data.Repo
 {
@@ -28,6 +29,19 @@ namespace Data.Repo
 
             _dbSet.Remove(entity);
             return true;
+        }
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().AnyAsync(predicate);
+        }
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().Where(predicate).ToListAsync();
+        }
+
+        public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().FirstOrDefaultAsync(predicate);
         }
         public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
     }
