@@ -1,21 +1,19 @@
-using System;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Context;
+namespace Data.Seeds;
 
-public static class Seed
+public static class AccountSeed
 {
-    public static void SeedData(this ModelBuilder modelBuilder)
+    public static void AccountData(this ModelBuilder modelBuilder)
     {
-        // Accounts
         modelBuilder.Entity<AccountEntity>()
         .HasData(
             new AccountEntity
             {
                 Id = 1,
                 Name = "Admin",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456")
+                PasswordHash = "$2a$12$I7rA/YxPCKJPhZ5LBdJvV.smGCgMjYlHHnmtRHzcA1ZFvvD0YuWsm"
             }
         );
     }

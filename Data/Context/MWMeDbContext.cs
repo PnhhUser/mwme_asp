@@ -1,10 +1,15 @@
+using Data.Seeds;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Context;
 
 public partial class MWMeDbContext : DbContext
 {
-    public MWMeDbContext(DbContextOptions<MWMeDbContext> options) : base(options) { }
+    public MWMeDbContext(DbContextOptions<MWMeDbContext> options) : base(options)
+    {
+        Accounts = Set<AccountEntity>();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -12,6 +17,6 @@ public partial class MWMeDbContext : DbContext
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MWMeDbContext).Assembly);
 
-        modelBuilder.SeedData();
+        modelBuilder.ApplySeed();
     }
 }

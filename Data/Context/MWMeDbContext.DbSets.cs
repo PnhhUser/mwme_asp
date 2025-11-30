@@ -5,5 +5,5 @@ namespace Data.Context;
 
 public partial class MWMeDbContext
 {
-    public required DbSet<AccountEntity> Accounts { get; set; }
+    public DbSet<AccountEntity> Accounts { get; set; } = null!;
 }
