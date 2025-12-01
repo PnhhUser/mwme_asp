@@ -1,0 +1,29 @@
+@page "/Login"
+@model Login.LoginModel
+
+@{
+    Layout = "_layout";
+}
+
+<h3>Login</h3>
+
+<form method="post">
+    <!-- Hidden field để giữ ReturnUrl -->
+    <input type="hidden" asp-for="ReturnUrl" />
+
+    <div class="mb-3">
+        <input type="text" asp-for="Username" aria-placeholder="Username" />
+        <span asp-validation-for="Username"></span>
+    </div>
+    <div class="mb-3">
+        <input type="password" asp-for="Password" aria-placeholder="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+
+    <button type="submit">Login</button>
+</form>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
