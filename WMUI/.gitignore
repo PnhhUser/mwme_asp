@@ -1,0 +1,18 @@
+# Build folders
+bin/
+obj/
+
+# Visual Studio / VS Code
+*.user
+*.suo
+*.vs/
+.vscode/
+
+# Environment files
+.env
+
+# Logs
+*.log
+
+# NuGet
+*.nupkg
