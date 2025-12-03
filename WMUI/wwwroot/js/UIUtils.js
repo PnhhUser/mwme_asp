@@ -9,7 +9,7 @@ const UIUtils = {
   // SELECTOR
   // ---------------------------
 
-  /** Lấy phần tử bằng CSS selector */
+  /** Lấy phần tử bằng selector */
   get: (s) => (s instanceof jQuery ? s : $(s)),
 
   /** Lấy phần tử theo ID */
@@ -71,13 +71,16 @@ const UIUtils = {
   // ATTRIBUTES
   // ---------------------------
 
-  /** Gán 1 attribute */
+  /** Gán 1 attribute hoặc lấy giá trị attribute */
   attr: (s, name, value) => UIUtils.get(s).attr(name, value),
 
   /** Gán nhiều attributes từ object */
   attrs: (s, obj) => {
     Object.entries(obj).forEach(([k, v]) => UIUtils.get(s).attr(k, v));
   },
+
+  /** Lấy giá trị khi dùng data- */
+  data: (s, name) => UIUtils.get(s).data(name),
 
   // ---------------------------
   // EVENTS

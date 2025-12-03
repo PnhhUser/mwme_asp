@@ -8,12 +8,12 @@ public static class AccountRules
     public static void ThrowIfAccountNotFound(AccountEntity? acc)
     {
         if (acc == null)
-            throw new NotFoundException("Account không tồn tại.");
+            throw new NotFoundException("Tài khoản này không tồn tại.");
     }
 
     public static void ThrowIfAccountExist(AccountEntity? acc)
     {
         if (acc != null)
-            throw new BadRequestException("Tên hiện tại đã tồn tại.");
+            throw new BadRequestException("Tài khoản hiện tại đã tồn tại.");
     }
 }

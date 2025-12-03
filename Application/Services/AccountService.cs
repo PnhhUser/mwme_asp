@@ -41,46 +41,30 @@ public class AccountService : IAccountService
 
     public async Task Create(AccountModel model)
     {
-        BaseRules.ThrowIfStringIsNullOrEmpty(model.Name, nameof(model.Name));
-        BaseRules.ThrowIfStringIsNullOrEmpty(model.Password, nameof(model.Password));
+        var AccExist = await _accountRepo.FirstOrDefaultAsync(p => p.Name == model.Name);
+        AccountRules.ThrowIfAccountExist(AccExist);
 
-        var existName = await _accountRepo.FirstOrDefaultAsync(p => p.Name == model.Name);
-        AccountRules.ThrowIfAccountExist(existName);
-
-        var entity = AccountModel.ToEntity(model, null);
-
-        await _accountRepo.AddAsync(entity);
+        await _accountRepo.AddAsync(AccountModel.ToEntity(model, null));
         await _accountRepo.SaveChangesAsync();
     }
 
-    public async Task Update(AccountModel model)
+    public async Task Update(int id, AccountModel model)
     {
-        BaseRules.ThrowIfIdIsInvalid(model.Id ?? 0);
-        BaseRules.ThrowIfStringIsNullOrEmpty(model.Name, nameof(model.Name));
+        var acc = await _accountRepo.GetByIdAsync(id);
 
-        var existingEntity = await _accountRepo.GetByIdAsync(model.Id!.Value);
-        AccountRules.ThrowIfAccountNotFound(existingEntity);
+        AccountRules.ThrowIfAccountNotFound(acc);
 
-        var existName = await _accountRepo.FirstOrDefaultAsync(p => p.Name == model.Name && p.Id != model.Id);
+        AccountModel.ToEntity(model, acc);
 
-        AccountRules.ThrowIfAccountExist(existName);
-
-
-        var entity = AccountModel.ToEntity(model, existingEntity);
-
-        _accountRepo.Update(entity);
         await _accountRepo.SaveChangesAsync();
     }
+
 
     public async Task Delete(int id)
     {
         BaseRules.ThrowIfIdIsInvalid(id);
 
-        var existingEntity = await _accountRepo.GetByIdAsync(id);
-
-        AccountRules.ThrowIfAccountNotFound(existingEntity);
-
-        await _accountRepo.DeleteAsync(existingEntity!.Id);
+        await _accountRepo.DeleteAsync(id);
         await _accountRepo.SaveChangesAsync();
     }
 }

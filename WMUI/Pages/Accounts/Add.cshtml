@@ -1,0 +1,40 @@
+﻿@page
+@model Accounts.AddModel
+@{
+    ViewData["Title"] = "Thêm tài khoản";
+}
+
+<h2>Thêm tài khoản</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Avatar" class="form-label"></label>
+        <input asp-for="Avatar" type="file" class="form-control" />
+        <span asp-validation-for="Avatar" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Username" class="form-label"></label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="IsActived" class="form-check-input" />
+        <label asp-for="IsActived" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Thêm tài khoản</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

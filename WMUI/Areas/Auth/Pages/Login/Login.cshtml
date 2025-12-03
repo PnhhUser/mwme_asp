@@ -5,22 +5,18 @@
     Layout = "_layout";
 }
 
-<h3>Login</h3>
 
 <form method="post">
-    <!-- Hidden field để giữ ReturnUrl -->
-    <input type="hidden" asp-for="ReturnUrl" />
-
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="mb-3">
-        <input type="text" asp-for="Username" aria-placeholder="Username" />
-        <span asp-validation-for="Username"></span>
+        <input type="text" asp-for="Username" placeholder="Tên người dùng" autocomplete="off" />
+        <span asp-validation-for="Username" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <input type="password" asp-for="Password" aria-placeholder="Password" />
-        <span asp-validation-for="Password"></span>
+        <input type="password" asp-for="Password" placeholder="Mật khẩu" />
+        <span asp-validation-for="Password" class="text-danger"></span>
     </div>
-
-    <button type="submit">Login</button>
+    <button type="submit">Đăng nhập</button>
 </form>
 
 

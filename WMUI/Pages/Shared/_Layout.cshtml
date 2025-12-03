@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -12,10 +13,18 @@
 </head>
 
 <body>
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <nav>
+            <a asp-page="/Index">Dashboard</a>
+            <a asp-page="/Accounts/Index">Accounts</a>
+            <span>- @User.FindFirstValue(ClaimTypes.NameIdentifier) - @User.Identity.Name - </span>
+            <a asp-area="Auth" asp-page="/Logout/Logout">logout</a>
+        </nav>
+    }
 
-    <main role="main">
-        @RenderBody()
-    </main>
+    @RenderBody()
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

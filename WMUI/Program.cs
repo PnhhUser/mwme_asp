@@ -29,7 +29,6 @@ builder.Services
 {
     options.LoginPath = "/Login";
     options.LogoutPath = "/Logout";
-    options.AccessDeniedPath = "/AccessDenied";
     options.Cookie.Name = "mwme";
     options.ExpireTimeSpan = TimeSpan.FromHours(1);
 });

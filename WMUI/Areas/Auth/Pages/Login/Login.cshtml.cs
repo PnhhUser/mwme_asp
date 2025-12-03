@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -5,71 +6,64 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WMUI.Areas.Auth.Pages.Login;
-
-[AllowAnonymous]
-public class LoginModel : PageModel
+namespace WMUI.Areas.Auth.Pages.Login
 {
-
-    public LoginModel(string? returnUrl = null)
+    [AllowAnonymous]
+    public class LoginModel : PageModel
     {
+        private readonly Application.Services.Interface.IAuthenticationService _authenticationService;
 
-    }
-
-    [BindProperty]
-    public required string Username { get; set; }
-
-    [BindProperty]
-    public required string Password { get; set; }
-
-
-    public string ReturnUrl { get; set; } = string.Empty;
-
-    public IActionResult OnGet(string? returnUrl = null)
-    {
-        if (User.Identity?.IsAuthenticated == true)
+        public LoginModel(
+            Application.Services.Interface.IAuthenticationService authenticationService
+            )
         {
-            return LocalRedirect(returnUrl ?? Url.Content("~/"));
+            _authenticationService = authenticationService;
         }
 
-        ReturnUrl = returnUrl ?? Url.Content("~/");
-        return Page();
-    }
+        [BindProperty]
+        [Required(ErrorMessage = "Vui lòng nhập tên người dùng")]
+        [MinLength(3, ErrorMessage = "Tên người dùng ít nhất 3 ký tự")]
+        public required string Username { get; set; }
 
+        [BindProperty]
+        [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
+        [MinLength(6, ErrorMessage = "Mật khẩu phải từ 6 ký tự trở lên")]
+        public required string Password { get; set; }
 
-    public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
-    {
-        if (!ModelState.IsValid)
+        public IActionResult OnGet()
         {
-            ReturnUrl = returnUrl ?? Url.Content("~/");
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return Redirect("/");
+            }
+
             return Page();
         }
 
-        if (Username == "admin" && Password == "password")
+        public async Task<IActionResult> OnPostAsync()
         {
-            var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, Username),
-        };
+            var acc = await _authenticationService.Login(Username, Password);
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-
-            // Đăng nhập user
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                principal,
-                new AuthenticationProperties
+            if (acc != null)
+            {
+                var claims = new List<Claim>
                 {
-                    IsPersistent = false, // Remember me?
-                    ExpiresUtc = DateTime.UtcNow.AddHours(1)
-                });
+                    new Claim(ClaimTypes.NameIdentifier, acc.Id.ToString()!),
+                    new Claim(ClaimTypes.Name, acc.Name),
+                    new Claim("IsOnline", acc.IsOnline.ToString())
+                };
 
-            // Redirect về trang gốc user muốn truy cập
-            return LocalRedirect(returnUrl ?? Url.Content("~/"));
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                return Redirect("/");
+            }
+
+            ModelState.AddModelError("", "Sai username hoặc password.");
+            return Page();
         }
-
-        ReturnUrl = returnUrl ?? Url.Content("~/");
-        return Page();
     }
+
 }

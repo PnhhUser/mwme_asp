@@ -10,6 +10,7 @@ public static class ServicesExtension
     {
 
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
 
         return services;
     }
