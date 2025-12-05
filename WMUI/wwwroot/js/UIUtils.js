@@ -434,17 +434,20 @@ const UIUtils = {
      * @param {function} successCallback - Hàm callback khi request thành công, nhận response
      * @param {function} errorCallback - Hàm callback khi request lỗi
      * @param {string} dataType - Kiểu dữ liệu trả về từ server ('json', 'text', 'html'...), mặc định 'json'
+     * @param {object} headers - Tùy chỉnh gửi kèm request, ví dụ RequestVerificationToken, Authorization
      */
-    get: function (
+    get: function ({
       url,
+      headers = {},
       data = {},
       successCallback,
       errorCallback,
-      dataType = "json"
-    ) {
+      dataType = "json",
+    }) {
       $.ajax({
         url: url,
         type: "GET",
+        headers,
         data: data, // sẽ convert object → query string ?key=value
         dataType: dataType, // định dạng dữ liệu trả về
         success: function (response) {
@@ -459,24 +462,26 @@ const UIUtils = {
 
     /**
      * Gửi POST request
-     * url - URL API
-     * data - Dữ liệu gửi đi (JS object hoặc FormData)
-     * successCallback - Callback khi request thành công
-     * errorCallback - Callback khi request lỗi
-     * dataType - Kiểu dữ liệu trả về từ server, mặc định 'json'
-     * contentType - Kiểu Content-Type gửi đi:
+     * @param {string} url - URL API
+     * @param {object} data - Dữ liệu gửi đi (JS object hoặc FormData)
+     * @param {function} successCallback - Callback khi request thành công
+     * @param {function} errorCallback - Callback khi request lỗi
+     * @param {object} dataType - Kiểu dữ liệu trả về từ server, mặc định 'json'
+     * @param {string} contentType - Kiểu Content-Type gửi đi:
      *   - "application/json" → gửi JSON string
      *   - false → gửi FormData (browser tự set multipart/form-data)
      *   - undefined → mặc định application/x-www-form-urlencoded
+     * @param {object} headers - Tùy chỉnh gửi kèm request, ví dụ RequestVerificationToken, Authorization
      */
-    post: function (
+    post: function ({
       url,
+      headers = {},
       data = {},
       successCallback,
       errorCallback,
       dataType = "json",
-      contentType
-    ) {
+      contentType,
+    }) {
       let sendData = data;
       const isFormData = data instanceof FormData;
 
@@ -487,6 +492,7 @@ const UIUtils = {
       $.ajax({
         url: url,
         type: "POST",
+        headers,
         data: sendData,
         dataType: dataType,
         contentType: isFormData
@@ -500,6 +506,115 @@ const UIUtils = {
           console.error("AJAX POST error:", status, error);
           errorCallback && errorCallback(xhr, status, error);
         },
+      });
+    },
+
+    /**
+     * Gửi request GET bất đồng bộ.
+     * @param {string} url - Đường dẫn API.
+     * @param {object} data - Query params gửi kèm.
+     * @param {string} dataType - Kiểu dữ liệu trả về (mặc định: json).
+     * @returns {Promise} - Promise resolve(response) hoặc reject(xhr).
+     * @param {object} headers - Tùy chỉnh gửi kèm request, ví dụ RequestVerificationToken, Authorization
+     */
+
+    getAsync: function (url, data = {}, headers = {}, dataType = "json") {
+      return $.ajax({
+        url,
+        type: "GET",
+        headers,
+        data,
+        dataType,
+      });
+    },
+
+    /**
+     * Gửi request POST bất đồng bộ.
+     * @param {string} url - API tạo mới dữ liệu.
+     * @param {object|FormData} data - Data gửi lên server.
+     * @param {boolean} isFormData - Nếu gửi file -> true để bỏ contentType/processData.
+     * @param {string} dataType - Kiểu dữ liệu trả về.
+     * @param {object} headers - Tùy chỉnh gửi kèm request, ví dụ RequestVerificationToken, Authorization
+     */
+
+    postAsync: function ({
+      url,
+      data = {},
+      headers = {},
+      dataType = "json",
+      contentType,
+    }) {
+      let sendData = data;
+      const isFormData = data instanceof FormData;
+
+      if (contentType === "application/json") {
+        sendData = JSON.stringify(data);
+      }
+
+      return $.ajax({
+        url,
+        type: "POST",
+        headers,
+        data: sendData,
+        dataType,
+        processData: !isFormData,
+        contentType: isFormData
+          ? false
+          : "application/x-www-form-urlencoded; charset=UTF-8",
+      }).catch((err) => {
+        throw err.responseJSON || { message: "Lỗi không xác định" };
+      });
+    },
+
+    /**
+     * Gửi request PUT bất đồng bộ (update dữ liệu).
+     * @param {string} url - API update.
+     * @param {object|FormData} data - Data update.
+     * @param {boolean} isFormData - Nếu gửi file -> true.
+     * @param {string} dataType - Kiểu dữ liệu trả về.
+     * @param {object} headers - Tùy chỉnh gửi kèm request, ví dụ RequestVerificationToken, Authorization
+     */
+
+    putAsync: function ({ url, data = {}, headers = {}, dataType = "json" }) {
+      const isFormData = data instanceof FormData;
+
+      return $.ajax({
+        url,
+        type: "PUT",
+        headers,
+        data,
+        dataType,
+        processData: !isFormData,
+        contentType: isFormData
+          ? false
+          : "application/x-www-form-urlencoded; charset=UTF-8",
+      }).catch((err) => {
+        throw err.responseJSON || { message: "Lỗi không xác định" };
+      });
+    },
+
+    /**
+     * Gửi request DELETE bất đồng bộ.
+     * @param {string} url - API xóa dữ liệu.
+     * @param {object} data - Body hoặc query gửi kèm (nếu có).
+     * @param {string} dataType - Kiểu dữ liệu trả về.
+     * @param {object} headers - Tùy chỉnh gửi kèm request, ví dụ RequestVerificationToken, Authorization
+     */
+
+    deleteAsync: function ({
+      url,
+      data = {},
+      headers = {},
+      dataType = "json",
+    }) {
+      return $.ajax({
+        url,
+        type: "DELETE",
+        headers,
+        data,
+        dataType,
+      }).catch((err) => {
+        throw err.responseJSON || { message: "Lỗi không xác định" };
       });
     },
   },

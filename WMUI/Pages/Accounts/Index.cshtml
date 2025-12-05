@@ -6,7 +6,7 @@
 }
 
 <div class="flex">
-    <a asp-page="/Accounts/Add" class="btn btn-primary">Thêm</a>
+    <a asp-page="/Accounts/Add">Thêm</a>
 </div>
 
 <Table class="table table-hover">
@@ -19,16 +19,17 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var acc in Model.AccountModels)
+        @for (int i = 0; i < Model.AccountModels.Count; i++)
         {
-            <tr>
-                <td>@acc.Id</td>
+            var acc = Model.AccountModels[i];
+            <tr data-id="@acc.Id" class="@(acc.IsActived ? "" : "table-danger")">
+                <td>@(i + 1)</td>
                 <td>@acc.Name</td>
                 <td>@acc.CreatedDate.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
                 <td>
                     <a asp-page="/Accounts/View" asp-route-id="@acc.Id">Xem</a>
                     <a asp-page="/Accounts/Edit" asp-route-id="@acc.Id">Sửa</a>
-                    <span data-id="@acc.Id" data-title="Thông báo xóa" class="remove text-danger"
+                    <span data-id="@acc.Id" data-title="Thông báo" class="remove text-danger"
                         style="cursor: pointer;">Xóa</span>
                 </td>
             </tr>
@@ -37,25 +38,8 @@
 </Table>
 
 
-<div class="modal" id="modal-remove" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Modal body text goes here.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Close
-                </button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+@Html.AntiForgeryToken()
 
 @section Scripts {
     <script src="~/js/UIUtils.js"></script>

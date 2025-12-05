@@ -66,7 +66,7 @@ namespace WMUI.Pages.Accounts
             }
             catch (Exception e)
             {
-                ModelState.AddModelError("", $"{e}");
+                ModelState.AddModelError("", $"{e.Message}");
                 return Page();
             }
         }

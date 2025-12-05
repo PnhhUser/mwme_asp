@@ -11,5 +11,5 @@ public interface IAccountService
     Task<IEnumerable<AccountEntity>> FindAll();
     Task Create(AccountModel model);
     Task Update(int id, AccountModel model);
-    Task Delete(int id);
+    Task<bool> Delete(int id);
 }

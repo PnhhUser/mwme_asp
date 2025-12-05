@@ -46,6 +46,12 @@ namespace WMUI.Areas.Auth.Pages.Login
 
             if (acc != null)
             {
+                if (acc.IsActived == false)
+                {
+                    ModelState.AddModelError("", "Tài khoản này đã bị khóa.");
+                    return Page();
+                }
+
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, acc.Id.ToString()!),

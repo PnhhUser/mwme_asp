@@ -1,2 +1,20 @@
 @import "../lib/bootstrap/dist/scss/functions";
 @import "../lib/bootstrap/dist/scss/variables";
+
+/* SHOW: trượt xuống + fade in */
+.modal.fade .modal-dialog {
+  transform: translateY(-80px);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.modal.fade.show .modal-dialog {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* HIDE: trượt lên + fade out */
+.modal.fade.hiding .modal-dialog {
+  transform: translateY(-80px);
+  opacity: 0;
+}

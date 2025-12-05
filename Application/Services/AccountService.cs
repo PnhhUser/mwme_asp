@@ -60,11 +60,18 @@ public class AccountService : IAccountService
     }
 
 
-    public async Task Delete(int id)
+    public async Task<bool> Delete(int id)
     {
         BaseRules.ThrowIfIdIsInvalid(id);
 
-        await _accountRepo.DeleteAsync(id);
-        await _accountRepo.SaveChangesAsync();
+        var isDel = await _accountRepo.DeleteAsync(id);
+
+        if (isDel)
+        {
+            await _accountRepo.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
     }
 }
