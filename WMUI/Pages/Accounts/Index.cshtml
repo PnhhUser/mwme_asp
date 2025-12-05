@@ -23,7 +23,10 @@
         {
             var acc = Model.AccountModels[i];
             <tr data-id="@acc.Id" class="@(acc.IsActived ? "" : "table-danger")">
-                <td>@(i + 1)</td>
+                <td>
+                    <span class="d-inline-block rounded-circle @(acc.IsOnline ? "bg-success" : "bg-danger")"
+                        style="width: 12px; height: 12px;"></span>
+                </td>
                 <td>@acc.Name</td>
                 <td>@acc.CreatedDate.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
                 <td>

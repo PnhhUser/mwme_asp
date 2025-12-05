@@ -6,7 +6,7 @@
 
 <img src="@Url.Content($"~/Images/Avatars/{Model.AccountModel.ImageUrl}")" class="img-fluid" alt="image" width="200">
 <ul>
-    <li>Name: @Model.AccountModel.Name</li>
+    <li>Name: @Model.AccountModel.Name - @(Model.AccountModel.IsOnline ? "Đang hoạt động" : "Không hoạt động")</li>
     <li>Trạng thái: @(Model.AccountModel.IsActived ? "Đã kích hoạt" : "Đã khóa")</li>
     <li>Ngày tạo: @Model.AccountModel.CreatedDate.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</li>
     <li>Ngày sửa: @Model.AccountModel.UpdatedDate.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</li>

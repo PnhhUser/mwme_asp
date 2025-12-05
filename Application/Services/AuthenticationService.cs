@@ -1,6 +1,7 @@
 using Application.Models;
 using Application.Services.Interface;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Rules;
 
@@ -49,11 +50,14 @@ public class AuthenticationService : IAuthenticationService
 
         var acc = await _accountRepo.FirstOrDefaultAsync(p => p.Id == id);
 
-        AccountRules.ThrowIfAccountNotFound(acc);
 
-        acc!.IsOnline = false;
+        if (acc == null)
+        {
+            throw new NotFoundException("Tài khoản này không tồn tại.");
+        }
 
-        _accountRepo.Update(acc);
+        acc.IsOnline = false;
+
         await _accountRepo.SaveChangesAsync();
     }
 }
